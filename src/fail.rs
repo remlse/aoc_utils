@@ -1,6 +1,8 @@
 //! Provides a helper struct [Fail] to make the generated
 //! tests nicer.
 
+use num::BigUint;
+
 /// Use this to indicate a test result isn't available yet.
 ///
 /// `PartialEq<Fail>` can be implemented for any type, as
@@ -22,4 +24,4 @@ macro_rules! impl_fail {
     };
 }
 
-impl_fail!(u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize, String);
+impl_fail!(u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize, String, BigUint);

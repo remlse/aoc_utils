@@ -1,6 +1,8 @@
 //! Provides a helper trait [Output] to make the generated
 //! main output nicer.
 
+use num::BigUint;
+
 /// Helper trait to provide nice main output for placholder
 /// values.
 pub trait Output: std::fmt::Display + Default + Eq {
@@ -24,4 +26,4 @@ macro_rules! impl_output {
     };
 }
 
-impl_output!(u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize, &str, String);
+impl_output!(u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize, &str, String, BigUint);
