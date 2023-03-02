@@ -5,7 +5,5 @@
 
 pub mod main_template;
 
-pub mod hash_count;
-
 pub mod fail;
 pub mod output;
