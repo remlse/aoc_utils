@@ -1,75 +1,36 @@
-use std::{fs::File, io::Write};
-
-use anyhow::{anyhow, Context};
-
-static MARKER: &str = "<!-- generate_readme_table_marker -->\n";
-
-static HEADER: &str = "<pre>
-        1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
-     ┌────────────────────────────────────────────────────────────────────────────┐
-";
-static FOOTER: &str =
-    "     └────────────────────────────────────────────────────────────────────────────┘
-</pre>
-";
-
-fn number_dirs_in(parent: &str) -> anyhow::Result<Vec<u8>> {
+fn number_dirs_in(parent: &str) -> Vec<u16> {
     let mut num_dirs = std::fs::read_dir(parent)
-        .context("failed to read project root directory")?
+        .expect("should read project root directory")
         .flatten()
         .filter(|dir_entry| matches!(dir_entry.file_type(), Ok(t) if t.is_dir()))
         .filter_map(|dir| dir.file_name().to_str().map(|s| s.to_owned()))
-        .filter_map(|dir_name| dir_name.parse::<u8>().ok())
+        .filter_map(|dir_name| dir_name.parse().ok())
         .collect::<Vec<_>>();
     num_dirs.sort();
-    Ok(num_dirs)
+    num_dirs
 }
 
-fn table() -> anyhow::Result<String> {
-    let mut table = String::from(HEADER);
+const ROW_HEIGHT: u16 = 25;
 
-    let years = number_dirs_in(".").context("failed to read years")?;
+fn main() {
+    let years = number_dirs_in(".");
+
+    let mut table = format!(
+        "<svg viewBox=\"0 0 500 {}\" xmlns=\"http://www.w3.org/2000/svg\">\n",
+        ROW_HEIGHT as usize * years.len()
+    );
 
     for year in years {
-        table += &format!("20{year:02} │ <a\n");
-
-        let days = number_dirs_in(year.to_string().as_str()).context("failed to read days")?;
+        let days = number_dirs_in(year.to_string().as_str());
 
         for day in 1..=25 {
-            let href = format!("\"https://adventofcode.com/20{year:02}/day/{day}\"");
-            let fill = if days.contains(&day) {
-                "▓▓"
-            } else {
-                "░░"
-            };
-            table += &format!("href={href:<38}>{fill}</a");
-
-            table += match day {
-                25 => "\n",
-                _ => "> <a\n",
-            };
+            let x = format!("x=\"{}\"", (day - 1) * 20);
+            let y = format!("y=\"{}\"", (year - 15) * ROW_HEIGHT + 15);
+            let fill = if days.contains(&day) { "⭐" } else { "🪟" };
+            table += &format!("<text {x:<7} {y:<7}>{fill}</text>\n");
         }
-        table += "> │\n";
     }
-    table += FOOTER;
+    table += "</svg>\n";
 
-    Ok(table)
-}
-
-fn main() -> anyhow::Result<()> {
-    let readme = std::fs::read_to_string("README.md").context("failed to read README.md")?;
-    let mut iter = readme.split(MARKER);
-    let pre = iter
-        .next()
-        .ok_or(anyhow!("failed to parse stuff before table"))?;
-    let post = iter
-        .nth(1)
-        .ok_or(anyhow!("failed to parse stuff after table"))?;
-
-    let table = table().context("failed to construct table")?;
-    let new_readme = format!("{pre}{MARKER}{table}{MARKER}{post}");
-
-    let mut out = File::create("README.md").context("failed to open README for writing")?;
-    out.write_all(new_readme.as_bytes())
-        .context("failed to write new README")
+    print!("{table}");
 }
