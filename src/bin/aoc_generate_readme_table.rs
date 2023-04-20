@@ -2,13 +2,8 @@ use std::{fs::File, io::Write};
 
 use anyhow::{anyhow, Context};
 
-static MARKER: &str = "<!-- genreate_readme_table_marker -->\n";
+static MARKER: &str = "<!-- generate_readme_table_marker -->\n";
 
-// static HEADER: &str = "<pre>
-//                  1 11111 11112 22222
-//        12345 67890 12345 67890 12345
-//      ┌───────────────────────────────┐
-// ";
 static HEADER: &str = "<pre>
         1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
      ┌────────────────────────────────────────────────────────────────────────────┐
