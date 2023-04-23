@@ -18,7 +18,7 @@ macro_rules! unsigned_int {
     };
 }
 
-unsigned_int!(u8 u16 u32 u64 u128);
+unsigned_int!(u8 u16 u32 u64 u128 usize);
 
 fn signed_int(input: &str) -> IResult<&str, &str> {
     preceded(opt(char('-')), digit1)(input)
@@ -35,7 +35,7 @@ macro_rules! signed_int {
     };
 }
 
-signed_int!(i8 i16 i32 i64 i128);
+signed_int!(i8 i16 i32 i64 i128 isize);
 
 #[test]
 fn test_i32() {
