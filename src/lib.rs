@@ -7,3 +7,8 @@ pub mod main_template;
 
 pub mod fail;
 pub mod output;
+
+// re-export of common dependencies
+pub use itertools;
+pub use itertools::Itertools;
+pub use nom;
