@@ -46,7 +46,7 @@ fn table() -> anyhow::Result<String> {
 
             table += match day {
                 25 => "\n",
-                _ => "> <a\n",
+                _ => "> <a\n\n",
             };
         }
         table += "> │\n";
