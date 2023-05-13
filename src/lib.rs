@@ -5,6 +5,7 @@
 //! Check out each module's documentation for more information.
 
 pub mod main_template;
+pub mod solution_template;
 
 pub mod fail;
 pub mod output;
