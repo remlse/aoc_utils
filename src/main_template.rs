@@ -5,7 +5,7 @@
 macro_rules! main {
     ($package:ident) => {
         fn main() {
-            use utils::output::Output;
+            use $crate::output::Output;
 
             let input_dir = format!("{}/input", std::env!("CARGO_MANIFEST_DIR"));
 
